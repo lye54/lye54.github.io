@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="The personal website of Laila, published with GitHub Pages."
+    />
+    <title>Laila | Personal Website</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Laila home">Laila</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">lye54.github.io</p>
+          <h1 id="hero-title">Hi, I’m Laila.</h1>
+          <p class="hero-text">
+            This is my personal corner of the web for projects, ideas, notes,
+            and anything I’m excited to share.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#work">See my work</a>
+            <a class="button secondary" href="https://github.com/lye54">GitHub</a>
+          </div>
+        </div>
+        <div class="hero-panel" aria-label="Website preview card">
+          <div class="status-row">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="preview-lines">
+            <strong>currently building</strong>
+            <p>projects, experiments, writing, and a home base online</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="work" aria-labelledby="work-title">
+        <div class="section-heading">
+          <p class="eyebrow">Featured</p>
+          <h2 id="work-title">Things I’m making</h2>
+        </div>
+        <div class="project-grid">
+          <article class="project-card">
+            <p class="project-type">Project</p>
+            <h3>First GitHub Pages Site</h3>
+            <p>
+              A fast, simple website that can grow into a portfolio, blog, or
+              collection of favorite work.
+            </p>
+          </article>
+          <article class="project-card">
+            <p class="project-type">Idea</p>
+            <h3>Learning Notes</h3>
+            <p>
+              Short notes about what I’m learning, what clicked, and what I
+              want to remember later.
+            </p>
+          </article>
+          <article class="project-card">
+            <p class="project-type">Space</p>
+            <h3>Creative Archive</h3>
+            <p>
+              A place for sketches, experiments, photos, writing, or anything
+              else that deserves a public home.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section about-section" id="about" aria-labelledby="about-title">
+        <div>
+          <p class="eyebrow">About</p>
+          <h2 id="about-title">A website that can grow with me.</h2>
+        </div>
+        <p>
+          Edit this section with a short bio, what you care about, what you’re
+          learning, or what kind of work you want people to find here.
+        </p>
+      </section>
+
+      <section class="section contact-section" id="contact" aria-labelledby="contact-title">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2 id="contact-title">Let’s connect.</h2>
+        </div>
+        <div class="contact-links">
+          <a href="https://github.com/lye54">GitHub</a>
+          <a href="mailto:hello@example.com">Email</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Made by Laila. Published with GitHub Pages.</p>
+      <button class="theme-toggle" type="button" aria-label="Switch color theme">
+        Theme
+      </button>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
