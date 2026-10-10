@@ -143,6 +143,10 @@ button {
   cursor: pointer;
 }
 
+.button.primary {
+  color: var(--panel);
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.6;

@@ -341,3 +341,15 @@ test("theme toggles remain usable if preference storage is full", async () => {
   assert.equal(app.document.documentElement.dataset.theme, undefined);
   assert.equal(app.alerts.length, 0);
 });
+
+test("care notes render newest-first and canceled deletion leaves data intact", async () => {
+  const existing = pet({ logs: [
+    { date: "2026-01-01", text: "Old note" },
+    { date: "2026-10-01", text: "New note" },
+  ] });
+  const app = setup([existing], { confirm: false });
+  const dates = allNodes(app.nodes["#pet-list"]).filter((node) => node.tagName === "time");
+  assert.deepEqual(dates.map((node) => node.dateTime), ["2026-10-01", "2026-01-01"]);
+  await button(app, "Delete pet").fire("click");
+  assert.deepEqual(app.saved(), [existing]);
+});
