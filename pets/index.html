@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A private, browser-only pet tracker with photos and dated care notes." />
+    <title>Pet tracker | Laila</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../">Laila / Pet tracker</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch color theme">Theme</button>
+    </header>
+    <main>
+      <section class="tracker-heading" aria-labelledby="tracker-title">
+        <div>
+          <p class="eyebrow">Your little companions</p>
+          <h1 id="tracker-title">Pet tracker</h1>
+          <p class="muted">A home for their details, photos, and everyday care notes.</p>
+        </div>
+        <button class="button primary" id="add-pet" type="button">Add pet</button>
+      </section>
+      <p class="privacy-note">Saved only in this browser, on this device. Photos never leave your device. Clearing browser data removes your pets; there is no cloud backup or sync.</p>
+      <p id="storage-status" class="error" role="alert" hidden></p>
+      <p id="empty-state" class="empty-state">No pets yet. Add your first companion to get started.</p>
+      <div id="pet-list" class="pet-grid"></div>
+    </main>
+
+    <dialog id="pet-dialog" aria-labelledby="pet-dialog-title">
+      <form id="pet-form">
+        <h2 id="pet-dialog-title">Add pet</h2>
+        <div class="form-grid">
+          <label>Name <input name="name" required maxlength="100" autocomplete="off" /></label>
+          <label>Species <input name="species" required maxlength="100" placeholder="e.g. Cat" /></label>
+          <label>Breed <input name="breed" maxlength="100" /></label>
+          <label>Birthday <input name="birthday" type="date" /></label>
+          <label>Age (if birthday unknown) <input name="age" maxlength="100" placeholder="e.g. About 3 years" /></label>
+          <label>Weight <input name="weight" maxlength="100" placeholder="e.g. 4.5 kg" /></label>
+        </div>
+        <label>Notes <textarea name="notes" rows="3" maxlength="5000"></textarea></label>
+        <fieldset class="photo-field">
+          <legend>Photo</legend>
+          <div class="photo-controls">
+            <img id="photo-preview" class="pet-photo" alt="Selected pet photo preview" hidden />
+            <span id="photo-placeholder" class="pet-photo photo-placeholder" aria-hidden="true">?</span>
+            <div>
+              <label for="pet-photo">Choose an image</label>
+              <input id="pet-photo" type="file" accept="image/*" aria-describedby="photo-help photo-status" />
+              <button id="remove-photo" class="text-button" type="button" hidden>Remove photo</button>
+            </div>
+          </div>
+          <p id="photo-help" class="muted">Optional. Resized to at most 400 pixels and saved as a compact JPEG.</p>
+          <p id="photo-status" role="status" aria-live="polite"></p>
+        </fieldset>
+        <div class="form-actions">
+          <button class="button secondary" id="cancel-pet" type="button">Cancel</button>
+          <button class="button primary" id="save-pet" type="submit">Save pet</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="log-dialog" aria-labelledby="log-dialog-title">
+      <form id="log-form">
+        <h2 id="log-dialog-title">Add care note</h2>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Care note <textarea name="text" rows="4" required maxlength="5000" placeholder="A vet visit, meal, walk, or anything worth remembering."></textarea></label>
+        <div class="form-actions">
+          <button class="button secondary" id="cancel-log" type="button">Cancel</button>
+          <button class="button primary" type="submit">Save note</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
