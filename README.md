@@ -25,6 +25,10 @@ HTML, CSS, and JavaScript with no build step, backend, or external dependencies.
 The portfolio homepage is unchanged.
 
 - Add, edit, or delete pet profiles and add dated care notes.
+- Use **Add sample pets** (or open `/pets/?samples=1`) to add three editable
+  examples: Luna the dog, Milo the cat, and Clover the rabbit. Existing pets and
+  edits to sample profiles are preserved; revisiting the link does not duplicate
+  the samples. Delete the samples like any other pet when you are done testing.
 - Choose one photo per pet, preview it, replace it, or remove it while editing.
   Photos are resized without upscaling to a maximum of 400 pixels on the longest
   side and encoded as JPEG at 80% quality. Transparent areas become white.

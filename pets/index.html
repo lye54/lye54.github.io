@@ -21,10 +21,14 @@
           <h1 id="tracker-title">Pet tracker</h1>
           <p class="muted">A home for their details, photos, and everyday care notes.</p>
         </div>
-        <button class="button primary" id="add-pet" type="button">Add pet</button>
+        <div class="tracker-actions">
+          <button class="button secondary" id="add-samples" type="button">Add sample pets</button>
+          <button class="button primary" id="add-pet" type="button">Add pet</button>
+        </div>
       </section>
       <p class="privacy-note">Saved only in this browser, on this device. Photos never leave your device. Clearing browser data removes your pets; there is no cloud backup or sync.</p>
       <p id="storage-status" class="error" role="alert" hidden></p>
+      <p id="sample-status" class="muted" role="status" hidden></p>
       <p id="empty-state" class="empty-state">No pets yet. Add your first companion to get started.</p>
       <div id="pet-list" class="pet-grid"></div>
     </main>

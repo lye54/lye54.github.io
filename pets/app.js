@@ -13,7 +13,38 @@ const photoPlaceholder = document.querySelector("#photo-placeholder");
 const photoStatus = document.querySelector("#photo-status");
 const removePhoto = document.querySelector("#remove-photo");
 const savePet = document.querySelector("#save-pet");
+const addSamples = document.querySelector("#add-samples");
+const sampleStatus = document.querySelector("#sample-status");
 const profileFields = ["name", "species", "breed", "birthday", "age", "weight", "notes"];
+const samplePets = [
+  {
+    id: "sample-pet-luna", name: "Luna", species: "Dog", breed: "Golden retriever",
+    birthday: "2022-04-12", age: "", weight: "27 kg", photo: "",
+    notes: "Sample pet. Loves long walks and tennis balls. Try adding a photo or editing her details.",
+    logs: [
+      { id: "sample-luna-walk", date: "2026-10-09", text: "A 30-minute walk in the park." },
+      { id: "sample-luna-vet", date: "2026-09-15", text: "Routine vet check: healthy and happy." },
+    ],
+  },
+  {
+    id: "sample-pet-milo", name: "Milo", species: "Cat", breed: "Domestic shorthair",
+    birthday: "2023-08-21", age: "", weight: "4.6 kg", photo: "",
+    notes: "Sample pet. Enjoys sunny windows and feather toys. You can edit or delete this profile.",
+    logs: [
+      { id: "sample-milo-play", date: "2026-10-08", text: "Played with the feather wand for 15 minutes." },
+      { id: "sample-milo-groom", date: "2026-10-05", text: "Brushed his coat and trimmed his claws." },
+    ],
+  },
+  {
+    id: "sample-pet-clover", name: "Clover", species: "Rabbit", breed: "Holland lop",
+    birthday: "", age: "About 2 years", weight: "1.8 kg", photo: "",
+    notes: "Sample pet. Shy at first, but loves fresh greens. Try adding a care note or photo.",
+    logs: [
+      { id: "sample-clover-food", date: "2026-10-09", text: "Fresh hay, water, and a small serving of leafy greens." },
+      { id: "sample-clover-care", date: "2026-10-06", text: "Cleaned the enclosure and checked her nails." },
+    ],
+  },
+];
 let pets = [];
 let storageReadable = true;
 let editingId = null;
@@ -45,6 +76,7 @@ function loadPets() {
     storageReadable = false;
     showStorageError("Saved pets could not be read. Saving is disabled to protect existing data. Check your browser storage settings or recover the saved data before trying again.");
     document.querySelector("#add-pet").disabled = true;
+    addSamples.disabled = true;
   }
 }
 
@@ -90,6 +122,7 @@ function initial(name) {
 
 function renderPets() {
   petList.replaceChildren();
+  addSamples.disabled = !storageReadable || samplePets.every((sample) => pets.some((pet) => pet.id === sample.id));
   emptyState.hidden = pets.length > 0 || !storageReadable;
   for (const pet of pets) {
     const card = element("article", "pet-card");
@@ -145,6 +178,19 @@ function renderPets() {
     petList.append(card);
   }
 }
+
+function addSamplePets() {
+  if (!storageReadable) return false;
+  const missing = samplePets.filter((sample) => !pets.some((pet) => pet.id === sample.id));
+  if (missing.length && !savePets([...pets, ...missing])) return false;
+  sampleStatus.textContent = missing.length
+    ? `Added ${missing.length} sample pets. Feel free to edit, photograph, or delete them.`
+    : "The sample pets are already here. Your edits have been kept.";
+  sampleStatus.hidden = false;
+  return true;
+}
+
+addSamples.addEventListener("click", addSamplePets);
 
 function updatePhotoPreview() {
   const hasPhoto = isPhoto(draftPhoto);
@@ -317,3 +363,10 @@ document.querySelector("#theme-toggle").addEventListener("click", () => {
 
 loadPets();
 renderPets();
+
+const sampleQuery = new URLSearchParams(window.location.search);
+if (sampleQuery.get("samples") === "1" && addSamplePets()) {
+  sampleQuery.delete("samples");
+  const query = sampleQuery.toString();
+  window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
+}

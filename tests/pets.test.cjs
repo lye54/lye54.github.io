@@ -42,7 +42,11 @@ class Element {
 }
 
 function setup(saved = [], options = {}) {
-  const nodes = Object.fromEntries([...markup.matchAll(/id="([^"]+)"/g)].map((match) => [`#${match[1]}`, new Element()]));
+  const nodes = Object.fromEntries([...markup.matchAll(/<[^>]*\bid="([^"]+)"[^>]*>/g)].map((match) => {
+    const element = new Element();
+    element.hidden = /\bhidden(?:\s|>|=)/.test(match[0]);
+    return [`#${match[1]}`, element];
+  }));
   for (const [id, fields] of [["pet-form", ["name", "species", "breed", "birthday", "age", "weight", "notes"]], ["log-form", ["date", "text"]]]) {
     const form = nodes[`#${id}`];
     form.fields = Object.fromEntries(fields.map((field) => [field, new Element("input")]));
@@ -53,6 +57,8 @@ function setup(saved = [], options = {}) {
   const images = [];
   const canvases = [];
   const revoked = [];
+  const location = { pathname: "/pets/", search: options.search || "", hash: options.hash || "" };
+  const history = { replaceState(_state, _unused, url) { history.replacedUrl = url; } };
   let failure = options.writeError;
   let sequence = 0;
   const document = {
@@ -81,6 +87,8 @@ function setup(saved = [], options = {}) {
   };
   const context = vm.createContext({
     document,
+    window: { location, history },
+    URLSearchParams,
     localStorage: {
       getItem(key) {
         if (options.readError) throw new Error("Storage denied");
@@ -108,7 +116,7 @@ function setup(saved = [], options = {}) {
   });
   vm.runInContext(source, context);
   return {
-    nodes, document, storage, alerts, images, canvases, revoked,
+    nodes, document, storage, alerts, images, canvases, revoked, history,
     field: (name) => nodes["#pet-form"].fields[name],
     saved: () => JSON.parse(storage.get("pets")),
     failWrites: (name) => { failure = name; },
@@ -352,4 +360,45 @@ test("care notes render newest-first and canceled deletion leaves data intact", 
   assert.deepEqual(dates.map((node) => node.dateTime), ["2026-10-01", "2026-01-01"]);
   await button(app, "Delete pet").fire("click");
   assert.deepEqual(app.saved(), [existing]);
+});
+
+test("sample pets are opt-in and append exactly three profiles without replacing existing pets", async () => {
+  const existing = pet({ photo, notes: "Keep my pet", logs: [{ date: "2026-10-01", text: "My note" }] });
+  const app = setup([existing]);
+  assert.deepEqual(app.saved(), [existing]);
+  await app.nodes["#add-samples"].fire("click");
+  assert.equal(app.saved().length, 4);
+  assert.deepEqual(app.saved()[0], existing);
+  assert.deepEqual(app.saved().slice(1).map((sample) => sample.name), ["Luna", "Milo", "Clover"]);
+  assert.ok(app.saved().slice(1).every((sample) => sample.logs.length === 2 && sample.photo === ""));
+  assert.equal(app.nodes["#add-samples"].disabled, true);
+  assert.equal(app.nodes["#sample-status"].hidden, false);
+});
+
+test("sample preview links seed only missing samples and preserve sample edits", async () => {
+  const app = setup([], { search: "?samples=1&other=keep", hash: "#test" });
+  assert.equal(app.saved().length, 3);
+  assert.equal(app.history.replacedUrl, "/pets/?other=keep#test");
+  const edited = app.saved();
+  edited[0].name = "Luna edited";
+  edited[0].photo = photo;
+  const reopened = setup(edited, { search: "?samples=1" });
+  assert.deepEqual(reopened.saved(), edited);
+  assert.equal(reopened.history.replacedUrl, "/pets/");
+  await button(reopened, "Delete pet").fire("click");
+  assert.equal(reopened.nodes["#add-samples"].disabled, false);
+  await reopened.nodes["#add-samples"].fire("click");
+  assert.equal(reopened.saved().length, 3);
+});
+
+test("failed sample seeding preserves saved data and reports storage errors", () => {
+  const existing = pet({ photo });
+  const app = setup([existing], { search: "?samples=1", writeError: "QuotaExceededError" });
+  assert.deepEqual(app.saved(), [existing]);
+  assert.match(app.alerts[0], /storage is full/);
+  assert.equal(app.nodes["#sample-status"].hidden, true);
+  assert.equal(app.history.replacedUrl, undefined);
+  const unreadable = setup("broken", { search: "?samples=1" });
+  assert.equal(unreadable.storage.get("pets"), "broken");
+  assert.equal(unreadable.nodes["#add-samples"].disabled, true);
 });

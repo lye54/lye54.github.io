@@ -1,8 +1,10 @@
 .tracker-heading,
+.tracker-actions,
 .pet-heading,
 .photo-controls,
 .card-actions,
-.form-actions {
+.form-actions,
+.tracker-actions {
   align-items: center;
   display: flex;
   gap: 16px;
