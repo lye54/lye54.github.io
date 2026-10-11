@@ -17,3 +17,35 @@ For a user site, GitHub Pages publishes the repository named exactly
 - Edit `index.html` to change your name, intro, project cards, and contact links.
 - Edit `styles.css` to change the colors, spacing, and layout.
 - Edit `script.js` to adjust the theme button behavior.
+
+## Pet tracker
+
+The standalone tracker lives at `https://lye54.github.io/pets/`. It uses plain
+HTML, CSS, and JavaScript with no build step, backend, or external dependencies.
+The portfolio homepage is unchanged.
+
+- Add, edit, or delete pet profiles and add dated care notes.
+- Use **Add sample pets** (or open `/pets/?samples=1`) to add three editable
+  examples: Luna the dog, Milo the cat, and Clover the rabbit. Existing pets and
+  edits to sample profiles are preserved; revisiting the link does not duplicate
+  the samples. Delete the samples like any other pet when you are done testing.
+- Choose one photo per pet, preview it, replace it, or remove it while editing.
+  Photos are resized without upscaling to a maximum of 400 pixels on the longest
+  side and encoded as JPEG at 80% quality. Transparent areas become white.
+- Profiles, care notes, and photo data URLs are saved as an array under the
+  `pets` localStorage key. Old profiles without a `photo` show an initial instead.
+- A failed save leaves the previously saved data and the current form intact.
+  If storage is full, remove a photo or delete an unused pet and retry.
+- Data stays in this browser on this device. It is not uploaded or synced, and
+  clearing browser data deletes it. GitHub Pages serves only the app files.
+- The theme button shares the portfolio's light/night preference.
+
+For local development, serve the repository root with `python3 -m http.server`
+and open `/pets/` on that server. No installation or build is needed. Use a
+separate browser profile or origin when testing to avoid changing real pet data.
+
+Run the dependency-free regression checks with Node.js 22 or newer:
+
+```sh
+node --test tests/pets.test.cjs
+```
